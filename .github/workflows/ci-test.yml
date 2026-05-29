@@ -1,0 +1,19 @@
+name: CI Test
+on:
+  push:
+    paths-ignore:
+      - '.github/workflows/**'
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update && sudo apt-get install -y cmake g++ libicu-dev
+      - name: Install dependencies
+        run: |
+          mkdir -p build && cd build && cmake ..
+      - name: Run tests
+        run: |
+          cd build && make -j$(nproc) && ctest
